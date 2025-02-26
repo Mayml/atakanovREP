@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сердечки от @musta5aev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            background-image: url('/static/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
+        }
+
+        html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        #countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 180px;
+            color: #ff4d4d;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 0 0 20px rgba(255,77,77,0.5);
+            font-weight: 600;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        #score {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            color: #ff4d4d;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 0 0 10px rgba(255,77,77,0.3);
+            z-index: 1000;
+            font-style: italic;
+            font-weight: 600;
+        }
+        #timer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 32px;
+            color: #ff4d4d;
+            font-family: 'Dancing Script', cursive;
+            text-shadow: 0 0 10px rgba(255,77,77,0.3);
+            z-index: 1000;
+            font-style: italic;
+            font-weight: 600;
+        }
+        .heart {
+            position: absolute;
+            user-select: none;
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+            animation: pulse 1s ease infinite;
+        }
+        .heart::before,
+        .heart::after {
+            position: absolute;
+            content: '';
+            left: 50px;
+            top: 0;
+            width: 50px;
+            height: 80px;
+            background: currentColor;
+            border-radius: 50px 50px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ff0000;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .particle::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff0000;
+            border-radius: 50%;
+            filter: blur(4px);
+            animation: twinkle 1s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        #finalHeartContainer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            pointer-events: none;
+        }
+        .particle.letter {
+            background: #ff4444;
+            width: 3px;
+            height: 3px;
+            filter: blur(2px);
+            box-shadow: 0 0 8px #ff0000;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+
+        #watermark {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Dancing Script', cursive;
+            font-size: 200px;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 192, 243, 0.7) 0%,    /* нежно-розовый */
+                rgba(183, 220, 246, 0.7) 25%,   /* нежно-голубой */
+                rgba(255, 182, 193, 0.7) 50%,   /* светло-розовый */
+                rgba(173, 216, 230, 0.7) 75%,   /* светло-голубой */
+                rgba(255, 192, 243, 0.7) 100%   /* нежно-розовый */
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 192, 243, 0.3);
+            z-index: 1;
+            pointer-events: none;
+            letter-spacing: 5px;
+            font-weight: 600;
+            animation: shimmer 6s linear infinite;
+        }
+        #restartButton {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 30px;
+            font-size: 20px;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 192, 243, 0.3) 0%,
+                rgba(183, 220, 246, 0.3) 50%,
+                rgba(255, 192, 243, 0.3) 100%
+            );
+            color: rgb(255, 192, 243);
+            border: 1px solid rgba(255, 192, 243, 0.5);
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(255, 192, 243, 0.5);
+            box-shadow: 0 0 15px rgba(255, 192, 243, 0.2);
+            z-index: 1000;
+        }
+
+        #restartButton:hover {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 192, 243, 0.4) 0%,
+                rgba(183, 220, 246, 0.4) 50%,
+                rgba(255, 192, 243, 0.4) 100%
+            );
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 192, 243, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown">5</div>
+    <div id="score">Собрано: 0</div>
+    <div id="timer">Время: 30</div>
+    <div id="finalHeartContainer"></div>
+    <div id="watermark">Diana</div>
+    <button id="restartButton">Играть снова</button>
+
+    <script>
+        let score = 0;
+        let gameTime = 30;
+        let isGameStarted = false;
+
+        // Обратный отсчет перед началом
+        let countDown = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const startCountdown = setInterval(() => {
+            countDown--;
+            countdownElement.textContent = countDown;
+            
+            if (countDown <= 0) {
+                clearInterval(startCountdown);
+                countdownElement.style.display = 'none';
+                startGame();
+            }
+        }, 1000);
+
+        function startGame() {
+            isGameStarted = true;
+            
+            // Таймер игры
+            const gameTimer = setInterval(() => {
+                gameTime--;
+                document.getElementById('timer').textContent = gameTime;
+                
+                if (gameTime <= 0) {
+                    clearInterval(gameTimer);
+                    endGame();
+                }
+            }, 1000);
+
+            // Создание сердечек
+            setInterval(createHeart, 500);
+        }
+
+        function getRandomColor() {
+            const colors = [
+                '#FFB6C1', // нежно-розовый
+                '#ADD8E6', // нежно-голубой
+                '#FFFFF0', // ivory
+                '#FF4D4D', // красный
+                '#800080'  // пурпурный
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function createHeart() {
+            if (!isGameStarted) return;
+            
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            const size = Math.random() * 60 + 50;
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.color = getRandomColor();
+            heart.style.left = `${Math.random() * (window.innerWidth - size)}px`;
+            heart.style.top = '-100px';
+
+            document.body.appendChild(heart);
+
+            heart.addEventListener('click', () => {
+                score++;
+                updateScore();
+                heart.remove();
+            });
+
+            let pos = -50;
+            const fall = setInterval(() => {
+                if (pos > window.innerHeight) {
+                    heart.remove();
+                    clearInterval(fall);
+                }
+                pos += 4;
+                heart.style.top = `${pos}px`;
+            }, 20);
+        }
+
+        function createParticles(count) {
+            const particles = [];
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * window.innerWidth}px`;
+                particle.style.top = `${Math.random() * window.innerHeight}px`;
+                particle.style.transform = 'scale(' + (Math.random() * 2 + 1) + ')';
+                document.body.appendChild(particle);
+                particles.push(particle);
+            }
+            return particles;
+        }
+
+        function createInnerHeart(centerX, centerY) {
+            const letterParticles = [];
+            const heartSize = 60; // Размер внутреннего сердца
+            const particleCount = 150; // Количество частиц
+            
+            for (let i = 0; i < particleCount; i++) {
+                const t = (i / particleCount) * Math.PI * 2;
+                const scale = 8;
+                // Параметрическое уравнение сердца
+                const heartX = 16 * Math.pow(Math.sin(t), 3);
+                const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                
+                const x = centerX + (heartX * scale);
+                const y = centerY + (heartY * scale);
+                
+                const particle = document.createElement('div');
+                particle.className = 'particle letter';
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                document.body.appendChild(particle);
+                letterParticles.push(particle);
+            }
+
+            return letterParticles;
+        }
+
+        function endGame() {
+            isGameStarted = false;
+            document.querySelectorAll('.heart').forEach(heart => heart.remove());
+            
+            // Создаем частицы для сердца
+            const particles = createParticles(1000);
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            setTimeout(() => {
+                particles.forEach((particle, index) => {
+                    const t = (index / particles.length) * Math.PI * 2;
+                    const scale = 15;
+                    const heartX = 16 * Math.pow(Math.sin(t), 3);
+                    const heartY = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                    
+                    const randomOffset = Math.random() * 20 - 10;
+                    const x = centerX + (heartX * scale) + randomOffset;
+                    const y = centerY + (heartY * scale) + randomOffset;
+                    
+                    particle.style.transform = `translate(${x - parseInt(particle.style.left)}px, ${y - parseInt(particle.style.top)}px)`;
+                    particle.style.opacity = Math.random() * 0.5 + 0.5;
+                });
+
+                // Показываем кнопку рестарта
+                setTimeout(() => {
+                    const restartButton = document.getElementById('restartButton');
+                    restartButton.style.visibility = 'visible';
+                    restartButton.style.opacity = '1';
+                }, 1000);
+            }, 100);
+        }
+
+        // Обновляем текст счетчика
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function resetGame() {
+            // Сброс всех значений
+            score = 0;
+            gameTime = 30;
+            isGameStarted = false;
+            countDown = 5;
+            
+            // Очистка всех частиц и сердец
+            document.querySelectorAll('.particle').forEach(p => p.remove());
+            document.querySelectorAll('.heart').forEach(h => h.remove());
+            
+            // Сброс отображения
+            updateScore();
+            document.getElementById('timer').textContent = '30';
+            document.getElementById('countdown').style.display = 'block';
+            document.getElementById('countdown').textContent = '5';
+            document.getElementById('restartButton').style.opacity = '0';
+            document.getElementById('restartButton').style.visibility = 'hidden';
+            
+            // Перезапуск игры
+            startCountdown = setInterval(() => {
+                countDown--;
+                countdownElement.textContent = countDown;
+                
+                if (countDown <= 0) {
+                    clearInterval(startCountdown);
+                    countdownElement.style.display = 'none';
+                    startGame();
+                }
+            }, 1000);
+        }
+
+        // Добавляем обработчик клика на кнопку
+        document.getElementById('restartButton').addEventListener('click', resetGame);
+    </script>
+</body>
+</html>
